@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using DoctorsOnTheMoveAfrica.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using DoctorsOnTheMoveAfrica.Services;
 
 namespace DoctorsOnTheMoveAfrica
 {
@@ -41,7 +43,7 @@ namespace DoctorsOnTheMoveAfrica
             services.AddDefaultIdentity<IdentityUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
+            services.AddTransient<IEmailSender, SendGridServices>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
