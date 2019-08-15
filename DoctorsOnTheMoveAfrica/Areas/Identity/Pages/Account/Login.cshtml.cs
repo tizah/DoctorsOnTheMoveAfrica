@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using DoctorsOnTheMoveAfrica.Constants;
 
 namespace DoctorsOnTheMoveAfrica.Areas.Identity.Pages.Account
 {
@@ -17,11 +18,12 @@ namespace DoctorsOnTheMoveAfrica.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        private readonly UserManager<IdentityUser> _userManager;
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
         }
 
         [BindProperty]
@@ -76,9 +78,25 @@ namespace DoctorsOnTheMoveAfrica.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
+                    // Resolve the user via their email
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    // Get the roles for the user
+                    var roles = await _userManager.GetRolesAsync(user);
+                    if (roles.Any(x => x.Equals(Roles.Admin)))
+                    {
+                        returnUrl = Url.Content("~/Admin/");
+                        return LocalRedirect(returnUrl);
+                    }else if (roles.Any(x => x.Equals(Roles.User)))
+                    {
+                        returnUrl = Url.Content("~/Users/");
+                        return LocalRedirect(returnUrl);
+                    }
+
+                    // Do something with the roles here
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
+           
                 if (result.RequiresTwoFactor)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
