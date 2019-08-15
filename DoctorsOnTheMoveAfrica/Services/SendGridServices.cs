@@ -21,7 +21,7 @@ namespace DoctorsOnTheMoveAfrica.Services
                 PlainTextContent = htmlMessage,
                 HtmlContent = htmlMessage
             };
-            msg.AddTo(new EmailAddress("davidzagi93@gmail.com", "Test User"));
+            msg.AddTo(new EmailAddress(email, "Client"));
             await client.SendEmailAsync(msg);
         }
     }
