@@ -81,6 +81,7 @@ namespace DoctorsOnTheMoveAfrica.Areas.Identity.Pages.Account
                     // Resolve the user via their email
                     var user = await _userManager.FindByEmailAsync(Input.Email);
                     // Get the roles for the user
+                    
                     var roles = await _userManager.GetRolesAsync(user);
                     if (roles.Any(x => x.Equals(Roles.Admin)))
                     {
@@ -88,7 +89,19 @@ namespace DoctorsOnTheMoveAfrica.Areas.Identity.Pages.Account
                         return LocalRedirect(returnUrl);
                     }else if (roles.Any(x => x.Equals(Roles.User)))
                     {
-                        returnUrl = Url.Content("~/Users/");
+                        var message = new
+                        {
+                            message = "Confirm your Email please",
+                        };
+                        if (user.EmailConfirmed == false)
+                        {
+                            returnUrl = Url.Content("~/Users/");
+                        }
+                        else
+                        {
+                            returnUrl = Url.Content("~/Users/");
+                        }
+                       
                         return LocalRedirect(returnUrl);
                     }
 
