@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+    <div class="alert alert-warning">
+        @ViewData["ConfirmEmail"]
+    </div>
+
+
+<h1>Users Index View</h1>
+
+<form>
+    <a class="flwpug_getpaid"
+       data-PBFPubKey="FLWPUBK-89ddbaef442283e91bbcc9dfacc73f8f-X"
+       data-txref="rave-123456"
+       data-amount="2000"
+       data-customer_email="user@example.com"
+       data-meta-flightID="APX0093GHK"
+       data-currency="NGN"
+       data-pay_button_text="Pay Now"
+       data-country="NG"
+       data-redirect_url="https://your-website.com/urlredirect"></a>
+
+    <script type="text/javascript" src="https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
+</form>
